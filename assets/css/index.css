@@ -17,9 +17,21 @@ h1{
 .navbar{
   font-size: 150%
 }
+.marty{
+  color:rgb(11, 100, 42)
+}
+.mars{
+  color: rgb(116, 18, 18);
+}
+.marty-comment{
+  color:rgb(116, 182, 139)
+}
+.mars-comment{
+  color: rgb(179, 121, 121);
+}
 
 p{
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
