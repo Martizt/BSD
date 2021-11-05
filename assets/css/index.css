@@ -30,6 +30,18 @@ h1{
   color: rgb(179, 121, 121);
 }
 
+th, td {
+  border: 1px solid black;
+  border-radius: 10px;
+}
+th{
+  font-size: 110%;
+}
+
+table{
+  padding-left:20%;
+}
+
 
 footer{
   color:rgba(172, 172, 172, 0.664);
