@@ -501,8 +501,6 @@ function input(event)
 
 
 
-
-
 //========================DECLERATIONS BELOW=======================//
 
 window.requestAnimationFrame(gameLoop);
