@@ -1,3 +1,4 @@
+//doesnt allow for arrow keys and space bar to move the screen
 window.addEventListener("keydown", function(e) {
     if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
         e.preventDefault();
@@ -5,20 +6,27 @@ window.addEventListener("keydown", function(e) {
 }, false);
 
 //========================VARIABLES BELOW=======================//
-var health = document.getElementById("health");
+var board = document.getElementById("board");
+var instructions = document.getElementById("instructions");
+
 
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 var lives = 3;
+var health = 100
+var score = 0;
+var start = 0;
 const gravityVal = 8;
 const playerSpeed = 12;
 const playerJump = 10;
 const allySpeed = 8;
-const enemySpeed = 10;
+const attackSpeed = 20;
+let enemySpeed = 10;
 
 let playerImage = new Image();
 let allyOneImage = new Image();
 let allyTwoImage = new Image();
+let playerAttackImage = new Image();
 
 let enemyImage = new Image();
 let enemyAttackImage = new Image();
@@ -27,6 +35,7 @@ let backGround = new Image();
 playerImage.src = "assets/media/kunikida.png";
 allyOneImage.src = "assets/media/dazai.png";
 allyTwoImage.src = "assets/media/atsushi.png";
+playerAttackImage.src = "assets/media/kuniattack.png";
 enemyImage.src = "assets/media/akutagawa.png";
 enemyAttackImage.src = "assets/media/attack.png";
 backGround.src = "assets/media/background.png"
@@ -34,8 +43,8 @@ backGround.src = "assets/media/background.png"
 let player = new gameObjects(playerImage, 150, 410, 120,220);
 let ally1 = new gameObjects(allyOneImage, 75, 410, 120,220);
 let ally2 = new gameObjects(allyTwoImage, 0, 410, 120,220);
+let pattack = new gameObjects(playerAttackImage, -50, player.y, 50,40);
 let enemy = new gameObjects(enemyImage, 1050, 410, 200, 220);
-let attacks = [9];
 let attack = new gameObjects(enemyAttackImage, 1050, Math.floor(Math.random() * 550), 130, 105);
 let backgroundpic = new gameObjects(backGround, 0,0, canvas.width, canvas.height)
 let gamerInput = new GamerInput("None"); 
@@ -44,33 +53,10 @@ let gamerInput = new GamerInput("None");
 //========================FUNCTIONS BELOW=======================//
 
 
-function gameLoop(){
-    update(); 
-    draw();
-    requestAnimationFrame(gameLoop);
-}
-
-//updates the game
-function update(){
-
-    playerMVMT();
-    characterChange();
-    alliesFollow();
-    gravity();
-
-
-    enemyFire();
-
-
-    border();
-    background();
-
-    setTimeout(changeHP(), 5000); //to fix
-    health.innerHTML = "HP: " + lives;
-
-}
 
 ////======PLAYER & ALLIES FUNCTIONS=======////
+
+
 //player movement function
 function playerMVMT()
 {
@@ -94,6 +80,17 @@ function playerMVMT()
     }
 
 }
+//player attacking the enemy
+function playerAttacks(){
+
+    if (gamerInput.action === "Attack")
+    {
+        pattack.x = player.x + 40;
+        pattack.y = player.y + 80;
+        pattack.x += attackSpeed;
+    }
+
+}
 //changes the character sprites
 function characterChange(){
 
@@ -102,18 +99,21 @@ function characterChange(){
         playerImage.src = "assets/media/kunikida.png";
         allyOneImage.src = "assets/media/dazai.png";
         allyTwoImage.src = "assets/media/atsushi.png";
+        playerAttackImage.src = "assets/media/kuniattack.png";
     }
     if (gamerInput.action === "Dazai")
     {
         playerImage.src = "assets/media/dazai.png";
         allyOneImage.src = "assets/media/atsushi.png";
         allyTwoImage.src = "assets/media/kunikida.png";
+        playerAttackImage.src = "assets/media/susattack.png";
     }
     if (gamerInput.action === "Atsushi")
     {
         playerImage.src = "assets/media/atsushi.png";
         allyOneImage.src = "assets/media/kunikida.png";
         allyTwoImage.src = "assets/media/dazai.png";
+        playerAttackImage.src = "assets/media/susattack.png";
     }
 
 }
@@ -157,16 +157,64 @@ function alliesFollow(){
 
 
 }
-//applies gravity to the player
+
+
+
+////======ENEMY FUNCTIONS=======////
+
+
+//enemy fires at a random y coord, while starting at the same x
+function enemyFire(){
+
+    if (attack.x > -150)
+    {
+        attack.x -= enemySpeed;
+    }
+    if (attack.x <= -150)
+    {
+        attack.x = 1050;
+        attack.y = Math.floor(Math.random() * 550);
+        enemySpeed = Math.floor(Math.random() * 20) + 5;
+        score += 1;
+    }
+
+}
+//makes the enemy jump to the attack
+function enemyMove(){
+
+    if (attack.x == enemy.x)
+    {
+        enemy.y = attack.y;
+    }
+    console.log("enemy jump");
+}
+//checks the collision of the enemy attack to player, causes appropriate damage
+function takeDamage(){
+    if(attack.x >= player.x -60 && attack.x <= player.x + 60 && attack.y >= player.y - 110&& attack.y <= player.y + 110)
+    {
+        health-=1;
+    }
+}
+
+
+
+////======OTHER IN GAME FUNCTIONS=======////
+
+
+//applies gravity to the player and enemy
 function gravity(){
 
     if (player.y < canvas.height)
     {
         player.y += gravityVal;
     }
+    if (enemy.y < canvas.height)
+    {
+        enemy.y += gravityVal;
+    }
 
 }
-//applies a border to the player
+//applies a border to the player and enemy
 function border(){
 
     if (player.y + 220 >= canvas.height -10)
@@ -177,7 +225,6 @@ function border(){
     {
         player.y = 0;
     }
-
     if (player.x + 120 >= canvas.width/1.3)
     {
         player.x = canvas.width/1.3 -120 ;
@@ -186,28 +233,55 @@ function border(){
     {
         player.x = 0;
     }
-}
-
-
-////======ENEMY FUNCTIONS=======////
-//allows for enemies to follow the player
-function enemyFire(){
-
-    if (attack.x > -150)
+ 
+    //border for enemy
+    if (enemy.y + 220 >= canvas.height -10)
     {
-        attack.x -= enemySpeed;
+        enemy.y = canvas.height - 230;
+    }
+    if (enemy.y <= 0)
+    {
+        enemy.y = 0;
     }
 
-}
 
-////======OTHER FUNCTIONS=======////
+}
+//scrolling background to be amde
 function background(){
-
-
 }
-
+//resets the game
+function reset(){
+    
+    if (gamerInput.action === "Reset")
+    {
+        location.reload();
+    }
+    
+}
+//starts the game
+function startGame(){
+    if (gamerInput.action === "Start")
+    {
+        start = 1;
+        instructions.innerHTML = "";
+    }
+}
+//pauses the game
+function pauseGame(){
+    if (gamerInput.action === "Pause")
+    {
+        start = 0;
+        instructions.innerHTML = "PAUSED";
+    }
+}
+//changes hp
 function changeHP()
 {
+    if(health ==0)
+    {
+        lives -= 1;
+        health = 100;
+    }
 
     if (gamerInput.action === "LowerHP")
     {
@@ -221,8 +295,51 @@ function changeHP()
 }
 
 
+////======OTHER FUNCTIONS=======////
 
 
+function gameLoop()
+{
+    if (lives <= 0)
+    {
+        start = 0;
+    }
+   
+    update(); 
+    draw();
+    requestAnimationFrame(gameLoop);
+    
+    
+}
+//updates the game
+function update(){
+
+    startGame();
+    pauseGame();
+    if (start === 1) 
+    {
+    
+    playerMVMT();
+    playerAttacks(); //to fix
+    characterChange();
+    alliesFollow();
+    gravity();
+    reset();
+    
+
+    enemyFire();
+    enemyMove();
+
+    takeDamage();
+    }
+
+    border();
+    background();
+
+    setTimeout(changeHP(), 5000); //to fix
+    board.innerHTML = "Lives:   " + lives + " HP:   " + health + " Score:   " + score;
+
+}
 //draws objects on the canvas
 function draw(){
    // Clear Canvas
@@ -280,6 +397,15 @@ function draw(){
             player.width,
             player.height
         )
+
+        context.drawImage
+        (
+            pattack.spritesheet, 
+            pattack.x,
+            pattack.y,
+            pattack.width,
+            pattack.height
+        )
     }
 
 
@@ -324,7 +450,23 @@ function input(event)
             case 40: // Down Arrow
                 gamerInput = new GamerInput("Down");
                 break;
+        
+            case 82: //r
+                gamerInput = new GamerInput("Reset");        
+                break;
+
+            case 32: //spaceebar
+                gamerInput = new GamerInput("Attack");        
+                break;
+
+            case 13: //enter
+                gamerInput = new GamerInput("Start");        
+                break;
             
+            case 80: //p
+                gamerInput = new GamerInput("Pause");        
+                break;
+
             case 49: //num 1
                 gamerInput = new GamerInput("Kuni");
                 break; 
