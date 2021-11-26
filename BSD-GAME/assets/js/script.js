@@ -1,4 +1,4 @@
-//doesnt allow for arrow keys and space bar to move the screen
+////doesnt allow for arrow keys and space bar to move the screen
 window.addEventListener("keydown", function(e) {
     if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
         e.preventDefault();
@@ -67,10 +67,9 @@ let gamerInput = new GamerInput("None");
 function playerMVMT()
 {
     //only allows the player tio jump when they havent jumped
-
     if (gamerInput.action === "Up")
     {
-        player.y -= playerJump * 2;
+        player.y -= playerSpeed * 2;
     }
     if (gamerInput.action === "Down")
     {
@@ -127,6 +126,21 @@ function characterChange(){
         playerAttackImage.src = "assets/media/susattack.png";
         playerSpeed = 14;
         playerJump = 5;
+    }
+
+
+    if (round == 2)
+    {
+        enemyImage.src = "assets/media/akutagawa.png";
+        enemyAttackImage.src = "assets/media/attack2.png";
+        backGround.src = "assets/media/bg2.png";
+    }
+
+    if (round == 3)
+    {
+        enemyImage.src = "assets/media/chuuya.png";
+        enemyAttackImage.src = "assets/media/attack3.png";
+        backGround.src = "assets/media/bg3.png";
     }
 
 }
@@ -220,6 +234,11 @@ function changeSpeed(){
         speedMultiplier = 13;
         round = 2; 
     }
+    //failsafe round switcher
+    if(score == 101){
+        speedMultiplier = 13;
+        round = 2; 
+    }
     if(score == 150){
         speedMultiplier = 15;
     }
@@ -230,27 +249,17 @@ function changeSpeed(){
         speedMultiplier = 20;
         round = 3;
     }
+    //failsafe round switcher
+    if(score == 251){
+        speedMultiplier = 20;
+        round = 3;
+    }
     if(score == 500){
         speedMultiplier = 25;
     }
 
 }
-//change enemy sprites
-function changeEnemy(){
-        if (round == 2)
-        {
-            enemyImage.src = "assets/media/akutagawa.png";
-            enemyAttackImage.src = "assets/media/attack2.png";
-            backGround.src = "assets/media/bg2.png";
-        }
 
-        if (round == 3)
-        {
-            enemyImage.src = "assets/media/chuuya.png";
-            enemyAttackImage.src = "assets/media/attack3.png";
-            backGround.src = "assets/media/bg3.png";
-        }
-}
 
 
 
@@ -386,7 +395,6 @@ function update(){
     enemyFire();
     enemyMove();
     changeSpeed();
-    changeEnemy();
 
     takeDamage();
     }
