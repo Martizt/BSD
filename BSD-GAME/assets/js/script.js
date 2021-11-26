@@ -49,7 +49,7 @@ backGround.src = "assets/media/bg1.png"
 let player = new gameObjects(playerImage, 150, 410, 120,220);
 let ally1 = new gameObjects(allyOneImage, 75, 410, 120,220);
 let ally2 = new gameObjects(allyTwoImage, 0, 410, 120,220);
-let pattack = new gameObjects(playerAttackImage, -50, player.y, 50,40);
+let pattack = new gameObjects(playerAttackImage, 2000, player.y, 50,40);
 let enemy = new gameObjects(enemyImage, 1050, 410, 200, 220);
 let attack = new gameObjects(enemyAttackImage, 1050, Math.floor(Math.random() * 550), 130, 105);
 let backgroundpic = new gameObjects(backGround, 0,0, canvas.width, canvas.height)
@@ -86,17 +86,26 @@ function playerMVMT()
 
 }
 //player attacking the enemy
-/*function playerAttacks(){
+function playerAttacks(){
 
     if (gamerInput.action === "Attack")
     {
         pattack.x = player.x + 40;
         pattack.y = player.y + 80;
-        pattack.x += attackSpeed;
+    }
+    if (pattack.x==player.x+40)
+    {
+        fire();
     }
 
 }
-*/
+//fires the actual shot
+function fire(){
+
+    pattack.x += attackSpeed;
+
+}
+
 //changes the character sprites
 function characterChange(){
 
@@ -387,7 +396,8 @@ function update(){
     {
     
     playerMVMT();
-    //playerAttacks(); //to fix
+    playerAttacks();
+    fire();
     characterChange();
     alliesFollow();
     gravity();
@@ -506,19 +516,31 @@ function input(event)
             case 37: // Left Arrow
                 gamerInput = new GamerInput("Left");
                 break;
+            case 65: // A
+                gamerInput = new GamerInput("Left");
+                break;
 
             case 38: // Up Arrow
                 gamerInput = new GamerInput("Up");
                 break; 
+            case 87: // W
+                gamerInput = new GamerInput("Up");
+                break;
 
             case 39: // Right Arrow
+                gamerInput = new GamerInput("Right");
+                break;
+            case 68: // D
                 gamerInput = new GamerInput("Right");
                 break;
 
             case 40: // Down Arrow
                 gamerInput = new GamerInput("Down");
                 break;
-        
+            case 83: // S
+                gamerInput = new GamerInput("Down");
+                break;
+            
             case 82: //r
                 gamerInput = new GamerInput("Reset");        
                 break;
