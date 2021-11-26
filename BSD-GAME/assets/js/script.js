@@ -5,6 +5,7 @@ window.addEventListener("keydown", function(e) {
     }
 }, false);
 
+
 //========================VARIABLES BELOW=======================//
 var board = document.getElementById("board");
 var instructions = document.getElementById("instructions");
@@ -16,12 +17,17 @@ var lives = 3;
 var health = 100
 var score = 0;
 var start = 0;
-const gravityVal = 8;
-const playerSpeed = 12;
-const playerJump = 10;
-const allySpeed = 8;
+var round = 1;
+
+const gravityVal = 3.5;
+
+let playerSpeed = 7;
+let playerJump = 7;
+const allySpeed = 7;
+
 const attackSpeed = 20;
-let enemySpeed = 10;
+let enemySpeed = 5;
+let speedMultiplier = 5;
 
 let playerImage = new Image();
 let allyOneImage = new Image();
@@ -36,9 +42,9 @@ playerImage.src = "assets/media/kunikida.png";
 allyOneImage.src = "assets/media/dazai.png";
 allyTwoImage.src = "assets/media/atsushi.png";
 playerAttackImage.src = "assets/media/kuniattack.png";
-enemyImage.src = "assets/media/akutagawa.png";
-enemyAttackImage.src = "assets/media/attack.png";
-backGround.src = "assets/media/background.png"
+enemyImage.src = "assets/media/kyouka.png";
+enemyAttackImage.src = "assets/media/attack1.png";
+backGround.src = "assets/media/bg1.png"
 
 let player = new gameObjects(playerImage, 150, 410, 120,220);
 let ally1 = new gameObjects(allyOneImage, 75, 410, 120,220);
@@ -81,7 +87,7 @@ function playerMVMT()
 
 }
 //player attacking the enemy
-function playerAttacks(){
+/*function playerAttacks(){
 
     if (gamerInput.action === "Attack")
     {
@@ -91,6 +97,7 @@ function playerAttacks(){
     }
 
 }
+*/
 //changes the character sprites
 function characterChange(){
 
@@ -100,6 +107,8 @@ function characterChange(){
         allyOneImage.src = "assets/media/dazai.png";
         allyTwoImage.src = "assets/media/atsushi.png";
         playerAttackImage.src = "assets/media/kuniattack.png";
+        playerSpeed = 7;
+        playerJump = 7;
     }
     if (gamerInput.action === "Dazai")
     {
@@ -107,6 +116,8 @@ function characterChange(){
         allyOneImage.src = "assets/media/atsushi.png";
         allyTwoImage.src = "assets/media/kunikida.png";
         playerAttackImage.src = "assets/media/susattack.png";
+        playerSpeed = 5;
+        playerJump = 14;
     }
     if (gamerInput.action === "Atsushi")
     {
@@ -114,6 +125,8 @@ function characterChange(){
         allyOneImage.src = "assets/media/kunikida.png";
         allyTwoImage.src = "assets/media/dazai.png";
         playerAttackImage.src = "assets/media/susattack.png";
+        playerSpeed = 14;
+        playerJump = 5;
     }
 
 }
@@ -122,7 +135,7 @@ function alliesFollow(){
     //ally
     if (ally1.y < player.y)
     {
-        ally1.y += allySpeed *2;
+        ally1.y += allySpeed;
     }
     if (ally1.y > player.y)
     {
@@ -140,7 +153,7 @@ function alliesFollow(){
     //ally two
     if (ally2.y < ally1.y)
     {
-        ally2.y += (allySpeed *2);
+        ally2.y += allySpeed;
     }
     if (ally2.y > ally1.y)
     {
@@ -160,6 +173,7 @@ function alliesFollow(){
 
 
 
+
 ////======ENEMY FUNCTIONS=======////
 
 
@@ -174,7 +188,7 @@ function enemyFire(){
     {
         attack.x = 1050;
         attack.y = Math.floor(Math.random() * 550);
-        enemySpeed = Math.floor(Math.random() * 20) + 5;
+        enemySpeed = Math.floor(Math.random() * 20) + speedMultiplier;
         score += 1;
     }
 
@@ -186,14 +200,56 @@ function enemyMove(){
     {
         enemy.y = attack.y;
     }
-    console.log("enemy jump");
 }
 //checks the collision of the enemy attack to player, causes appropriate damage
 function takeDamage(){
     if(attack.x >= player.x -60 && attack.x <= player.x + 60 && attack.y >= player.y - 110&& attack.y <= player.y + 110)
     {
-        health-=1;
+        health-=round;
     }
+}
+//increases difficulty
+function changeSpeed(){
+    if(score == 20){
+        speedMultiplier = 7; 
+    }
+    if(score == 50){
+        speedMultiplier = 10; 
+    }
+    if(score == 100){
+        speedMultiplier = 13;
+        round = 2; 
+    }
+    if(score == 150){
+        speedMultiplier = 15;
+    }
+    if(score == 200){
+        speedMultiplier = 18;
+    }
+    if(score == 250){
+        speedMultiplier = 20;
+        round = 3;
+    }
+    if(score == 500){
+        speedMultiplier = 25;
+    }
+
+}
+//change enemy sprites
+function changeEnemy(){
+        if (round == 2)
+        {
+            enemyImage.src = "assets/media/akutagawa.png";
+            enemyAttackImage.src = "assets/media/attack2.png";
+            backGround.src = "assets/media/bg2.png";
+        }
+
+        if (round == 3)
+        {
+            enemyImage.src = "assets/media/chuuya.png";
+            enemyAttackImage.src = "assets/media/attack3.png";
+            backGround.src = "assets/media/bg3.png";
+        }
 }
 
 
@@ -277,7 +333,7 @@ function pauseGame(){
 //changes hp
 function changeHP()
 {
-    if(health ==0)
+    if(health <=0)
     {
         lives -= 1;
         health = 100;
@@ -320,7 +376,7 @@ function update(){
     {
     
     playerMVMT();
-    playerAttacks(); //to fix
+    //playerAttacks(); //to fix
     characterChange();
     alliesFollow();
     gravity();
@@ -329,6 +385,8 @@ function update(){
 
     enemyFire();
     enemyMove();
+    changeSpeed();
+    changeEnemy();
 
     takeDamage();
     }
@@ -337,7 +395,7 @@ function update(){
     background();
 
     setTimeout(changeHP(), 5000); //to fix
-    board.innerHTML = "Lives:   " + lives + " HP:   " + health + " Score:   " + score;
+    board.innerHTML = "Lives:   " + lives + " === HP:   " + health + " === Round: " + round + " === Score:   " + score;
 
 }
 //draws objects on the canvas
