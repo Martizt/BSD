@@ -39,9 +39,8 @@ h2{
     position: fixed;
   }
   #instructions{
-    font-size:60%;
+    font-size:80%;
     text-align: center;
-    position:static;
   }
 
   a:link {
