@@ -21,15 +21,7 @@ section.full{
 
 }
 
-.buttons {
-  color:rgb(81, 46, 119);
-  background-color: rgb(255, 233, 233);
-  padding: 5px;
-  border-radius: 20%;
-  border: 2px solid rgb(255, 172, 251);
-  font-weight: 300;
-  font-size: 120%;
-}
+
 
 h1{
     color:white;
@@ -49,6 +41,7 @@ h2{
   #instructions{
     font-size:60%;
     text-align: center;
+    position:static;
   }
 
   a:link {
@@ -87,7 +80,7 @@ h2{
     padding: 0;
     }
     
-    li {
+    li.navbar {
     display: inline;
   
     }

@@ -69,7 +69,7 @@ function playerMVMT()
     //only allows the player tio jump when they havent jumped
     if (gamerInput.action === "Up")
     {
-        player.y -= playerSpeed * 2;
+        player.y -= playerJump * 2;
     }
     if (gamerInput.action === "Down")
     {
