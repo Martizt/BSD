@@ -236,7 +236,7 @@ function enemyMove(){
 }
 //checks the collision of the enemy attack to player, causes appropriate damage
 function takeDamage(){
-    if(attack.x >= player.x -60 && attack.x <= player.x + 60 && attack.y >= player.y - 110&& attack.y <= player.y + 110)
+    if(attack.x >= player.x -60 && attack.x <= player.x + 60 && attack.y >= player.y - 80&& attack.y <= player.y + 140)
     {
         health-=round;
     }
@@ -392,7 +392,7 @@ function update(){
 
     startGame();
     pauseGame();
-    if (start === 1) 
+    if (start == 1) 
     {
     
     playerMVMT();
