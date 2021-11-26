@@ -351,11 +351,13 @@ function changeHP()
     if (gamerInput.action === "LowerHP")
     {
         lives -= 1;
+        console.log("health removed");
     }
     
     if (gamerInput.action === "HigherHP")
     {
         lives += 1;
+        console.logt("health added");
     }
 }
 
