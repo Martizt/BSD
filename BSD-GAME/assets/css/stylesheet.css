@@ -38,9 +38,11 @@ h2{
     text-align: left;
     position: fixed;
   }
-  #instructions{
-    font-size:80%;
+  #instruction{
+    list-style-type: none;
+    font-size:70%;
     text-align: center;
+    display: inline;
   }
 
   a:link {
