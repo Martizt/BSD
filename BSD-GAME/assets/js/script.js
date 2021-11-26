@@ -129,6 +129,11 @@ function characterChange(){
     }
 
 
+    //failsafe round switcher
+    if(score == 100){
+            speedMultiplier = 13;
+            round = 2; 
+    }
     if (round == 2)
     {
         enemyImage.src = "assets/media/akutagawa.png";
@@ -136,6 +141,11 @@ function characterChange(){
         backGround.src = "assets/media/bg2.png";
     }
 
+    //failsafe round switcher
+    if(score == 250){
+        speedMultiplier = 20;
+        round = 3;
+    }
     if (round == 3)
     {
         enemyImage.src = "assets/media/chuuya.png";
@@ -234,11 +244,6 @@ function changeSpeed(){
         speedMultiplier = 13;
         round = 2; 
     }
-    //failsafe round switcher
-    if(score == 101){
-        speedMultiplier = 13;
-        round = 2; 
-    }
     if(score == 150){
         speedMultiplier = 15;
     }
@@ -246,11 +251,6 @@ function changeSpeed(){
         speedMultiplier = 18;
     }
     if(score == 250){
-        speedMultiplier = 20;
-        round = 3;
-    }
-    //failsafe round switcher
-    if(score == 251){
         speedMultiplier = 20;
         round = 3;
     }
